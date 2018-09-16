@@ -7,7 +7,8 @@ Page({
     motto: 'Hello World',
     userInfo: {},
     hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo')
+    canIUse: wx.canIUse('button.open-type.getUserInfo'),
+    movieInfo: {}
   },
   //事件处理函数
   bindViewTap: function() {
@@ -16,6 +17,8 @@ Page({
     })
   },
   onLoad: function () {
+    this.getDouban();
+    
     if (app.globalData.userInfo) {
       this.setData({
         userInfo: app.globalData.userInfo,
@@ -50,5 +53,23 @@ Page({
       userInfo: e.detail.userInfo,
       hasUserInfo: true
     })
+  },
+  getDouban: function () {
+    wx.request({
+      url: 'https://douban.uieee.com/v2/book/1220562',
+      header: {
+        "content-type": "json"
+      },
+      success: backData => {
+        console.log(backData);
+        console.log(backData.statusCode);
+        if (backData.statusCode == "200") {
+          this.setData({
+            movieInfo: backData.data
+          });
+        }
+      }
+    })
   }
 })
+
